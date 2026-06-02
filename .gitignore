@@ -118,3 +118,48 @@ log/
 .yarn/
 .pip-cache/
 .thumbnails/
+
+# Development and build directories
+.vscode/
+.vscode-shared/
+.cursor/
+.claude/
+.factory/
+.android/
+.cocoapods/
+.expo/
+.gem/
+.gradle/
+.swiftpm/
+.volta/
+.pi/
+.chelper/
+.codexbar/
+
+# Config directories (most contain sensitive data)
+.config/
+
+# SSH and Security (keep separate for manual selection if needed)
+.ssh/
+
+# History and session files
+.viminfo
+.lesshst
+.zsh_sessions/
+
+# System and user directories
+Applications/
+Desktop/
+Documents/
+Downloads/
+Library/
+Movies/
+Music/
+Pictures/
+Public/
+dev/
+.agents/
+.local/
+
+# System-specific files
+.CFUserTextEncoding
