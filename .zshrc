@@ -4,7 +4,8 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-export EDITOR="cursor"
+export EDITOR="vim"
+export GIT_EDITOR="vim"
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
@@ -23,7 +24,9 @@ alias lt="eza --tree"
 # bat
 alias cat="bat"
 
-# alias
+# git completions
+autoload -U compinit && compinit
+
 alias c="cursor ."
 alias cc="claude"
 alias op="opencode"
