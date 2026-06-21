@@ -19,6 +19,12 @@ This repository uses a comprehensive `.gitignore` to exclude sensitive files inc
 
 - **Shell Configurations**: `.zshrc`, `.zprofile`, `.fzf.bash`, `.fzf.zsh`
 - **Tmux Configuration**: `.tmux.conf`
+- **Git Configuration**: `.gitconfig` (aliases, delta pager, merge style)
+- **Prompt**: `.config/starship.toml`
+- **Global Gitignore**: `.config/git/ignore`
+- **Keyboard Remap**: `.config/karabiner/karabiner.json` (Karabiner-Elements)
+- **Browser Router**: `.finicky.js` (Finicky - work vs personal browser routing)
+- **Pi Agent Preferences**: `.pi-agent-settings.json`
 - **Homebrew Packages**: `Brewfile` with all installed formulas and casks
 - **Claude AI Configuration**: `.claude.json`
 - **Comprehensive `.gitignore`**: Protects sensitive data automatically
@@ -54,10 +60,19 @@ Copy the configuration files to your home directory:
 
 ```bash
 # Shell configurations
-cp .zshrc .zprofile .fzf.bash .fzf.zsh .tmux.conf ~/
+cp .zshrc .zprofile .fzf.bash .fzf.zsh .tmux.conf .gitconfig .finicky.js ~/
 
 # Claude configuration
 cp .claude.json ~/
+
+# Pi agent preferences
+cp .pi-agent-settings.json ~/.pi/agent/settings.json
+
+# XDG configs
+mkdir -p ~/.config/git ~/.config/karabiner
+cp .config/starship.toml ~/.config/
+cp .config/git/ignore ~/.config/git/
+cp .config/karabiner/karabiner.json ~/.config/karabiner/
 ```
 
 ### Step 5: Apply Shell Changes

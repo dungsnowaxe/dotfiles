@@ -1,0 +1,18 @@
+[user]
+	name = Doan Anh Dung
+	email = doananhdung1310@gmail.com
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+[merge]
+	conflictStyle = zdiff3
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	lg = log --graph --oneline --decorate --all
+[push]
+	autoSetupRemote = true

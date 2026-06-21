@@ -1,0 +1,24 @@
+add_newline = false
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$nodejs\
+$character
+"""
+
+[directory]
+truncate_to_repo = false
+
+[git_branch]
+symbol = " "
+
+[nodejs]
+format = "[$version](bold green) "
+
+[package]
+disabled = true
+
+[cmd_duration]
+disabled = true

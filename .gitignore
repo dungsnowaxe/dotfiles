@@ -63,7 +63,6 @@ session_token
 # Common dotfiles with sensitive data
 .netrc
 .git-credentials
-.gitconfig
 .hgrc
 .subversion/config
 .vault
@@ -137,7 +136,13 @@ log/
 .codexbar/
 
 # Config directories (most contain sensitive data)
-.config/
+# Whitelist specific safe configs:
+.config/*
+!/.config/starship.toml
+!/.config/git/
+!/.config/git/ignore
+!/.config/karabiner/
+!/.config/karabiner/karabiner.json
 
 # SSH and Security (keep separate for manual selection if needed)
 .ssh/
