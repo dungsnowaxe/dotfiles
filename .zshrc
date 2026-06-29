@@ -6,34 +6,34 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 export EDITOR="vim"
 export GIT_EDITOR="vim"
+export HOMEBREW_NO_ENV_HINTS=1
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-eval "$(starship init zsh)"
+# completions first
+autoload -U compinit && compinit
 
 # zoxide
-alias cd="z"
 eval "$(zoxide init zsh)"
+alias cd="z"
 
-# eza
+# fzf
+eval "$(fzf --zsh)"
+
+# plugins
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# aliases
 alias ls="eza"
 alias ll="eza -la"
 alias la="eza -la"
 alias lt="eza --tree"
-
-# bat
 alias cat="bat"
-
-# git completions
-autoload -U compinit && compinit
-
 alias c="cursor ."
 alias cc="claude"
 alias op="opencode"
 alias gwt="git worktree list"
-
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 mkcd() {
   mkdir -p "$1" && cd "$1"
@@ -45,5 +45,60 @@ take() {
 }
 
 reload() {
-  source ~/.zshrc
+  exec zsh
 }
+
+# Use fd as fzf source
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+
+_fzf_compgen_path() {
+  fd --hidden --exclude .git . "$1"
+}
+
+_fzf_compgen_dir() {
+  fd --type=d --hidden --exclude .git . "$1"
+}
+
+show_file_or_dir_preview='
+if [ -d {} ]; then
+  eza --tree --color=always {} | head -200
+else
+  bat -n --color=always --line-range :500 {}
+fi
+'
+
+export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)
+      fzf --preview 'eza --tree --color=always {} | head -200' "$@"
+      ;;
+    export|unset)
+      fzf --preview "eval 'echo \${}'" "$@"
+      ;;
+    ssh)
+      fzf --preview 'dig {}' "$@"
+      ;;
+    *)
+      fzf --preview "$show_file_or_dir_preview" "$@"
+      ;;
+  esac
+}
+
+bindkey '^[^?' vi-backward-kill-word
+bindkey '^[^H' vi-backward-kill-word
+bindkey '^[b' vi-backward-word
+bindkey '^[f' vi-forward-word
+bindkey '^[[1;3D' vi-backward-word
+bindkey '^[[1;3C' vi-forward-word
+
+
+# Starship LAST
+eval "$(starship init zsh)"
