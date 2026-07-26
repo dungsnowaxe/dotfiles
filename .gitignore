@@ -1,170 +1,37 @@
-# API Keys and Secrets
+# Secrets and local authentication
+.env
+.env.*
 *.key
 *.pem
 *.p12
 *.pfx
-*.crt
-*.cer
-*.der
-.env
-.env.local
-.env.*.local
 credentials
 secrets
-secret
-api_key
-apikey
-api-key
-
-# SSH Keys
-.ssh/id_rsa
-.ssh/id_ed25519
-.ssh/id_rsa.pub
-.ssh/id_ed25519.pub
-.ssh/config  # Be careful - this might contain sensitive info
-
-# GPG Keys
-.gnupg/
-*.asc
-*.gpg
-
-# Database files with credentials
-*.db
-*.sqlite
-*.sqlite3
-
-# Password managers
-*.kdbx
-*.kwallet
-
-# AWS/Cloud credentials
-.aws/credentials
-.aws/config
-.aws/config.backup
-.aws/credentials.backup
-.azure/config
-.gcloud/credentials.db
-.gcloud/access_tokens.db
-
-# Token files
-token
-tokens
-access_token
-refresh_token
-auth_token
-session_token
-
-# History files that might contain sensitive commands
-.bash_history
-.zsh_history
-.history
-.python_history
-
-# Common dotfiles with sensitive data
 .netrc
-.git-credentials
-.hgrc
-.subversion/config
-.vault
-
-# Node/Python sensitive files
 .npmrc
-.pypirc
-.pip/pip.conf
-.python-keyring
+.git-credentials
+auth.json
 
-# Application specific
-.thunderbird/
-.firefox/
-.chrome/
-.opera/
-.vivaldi/
+# Application state
+.claude.json
+.pi-agent-settings.json
+.claude/
+.codex/
+.agents/
 
-# System files
+# Editors and generated files
 .DS_Store
-.Trashes
-.Spotlight-V100
-.TemporaryItems
-.fseventsd
-.AppleDouble
-.LSOverride
-
-# Temporary files
+.vscode/
+.cursor/
+*.log
 *.tmp
-*.temp
 *.swp
-*.swo
 *~
 
-# Log files that might contain sensitive info
-*.log
-logs/
-log/
-
-# Backup files
-*.bak
-*.backup
-*.old
-*_backup
-*_bak
-
-# VS Code extensions (installed binaries)
-.vscode/extensions/
-
-# Cache directories
-.cache/
-.npm/
-.yarn/
-.pip-cache/
-.thumbnails/
-
-# Development and build directories
-.vscode/
-.vscode-shared/
-.cursor/
-.claude/
-.factory/
-.android/
-.cocoapods/
-.expo/
-.gem/
-.gradle/
-.swiftpm/
-.volta/
-.pi/
-.chelper/
-.codexbar/
-
-# Config directories (most contain sensitive data)
-# Whitelist specific safe configs:
+# XDG config is opt-in
 .config/*
 !/.config/starship.toml
 !/.config/git/
 !/.config/git/ignore
 !/.config/karabiner/
 !/.config/karabiner/karabiner.json
-
-# SSH and Security (keep separate for manual selection if needed)
-.ssh/
-
-# History and session files
-.viminfo
-.lesshst
-.zsh_sessions/
-
-# System and user directories
-Applications/
-Desktop/
-Documents/
-Downloads/
-Library/
-Movies/
-Music/
-Pictures/
-Public/
-dev/
-.agents/
-.local/
-
-# System-specific files
-.CFUserTextEncoding

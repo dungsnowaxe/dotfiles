@@ -35,13 +35,8 @@ alias cc="claude"
 alias op="opencode"
 alias gwt="git worktree list"
 
-mkcd() {
-  mkdir -p "$1" && cd "$1"
-}
-
 take() {
-  mkdir -p "$1"
-  cd "$1"
+  mkdir -p "$1" && cd "$1"
 }
 
 reload() {
@@ -100,5 +95,5 @@ bindkey '^[[1;3D' vi-backward-word
 bindkey '^[[1;3C' vi-forward-word
 
 
-# Starship LAST
+# Starship last
 eval "$(starship init zsh)"
