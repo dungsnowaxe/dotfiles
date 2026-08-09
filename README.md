@@ -12,11 +12,11 @@ brew bundle --file=Brewfile
 exec zsh
 ```
 
-`install.sh` creates symlinks for the tracked configuration. Existing regular files are left untouched and reported as `skip`; move or remove them yourself before running the installer again.
+`install.sh` installs mise from `mise.run` and creates symlinks for the tracked configuration. Existing regular files are left untouched and reported as `skip`; move or remove them yourself before running the installer again.
 
 ## Included
 
-- Zsh, Starship, fzf, zoxide, eza, bat
+- Zsh, mise, Starship, fzf, zoxide, eza, bat
 - tmux, Git, delta, GitHub CLI
 - Cursor as the primary editor; VS Code for extension checks; Zed as a lower-memory option
 - Codex and other currently installed development tools

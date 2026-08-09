@@ -3,6 +3,10 @@ set -eu
 
 repo=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 
+if ! command -v mise >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/mise" ]; then
+  curl -fsSL https://mise.run | sh
+fi
+
 link() {
   source=$1
   target=$2

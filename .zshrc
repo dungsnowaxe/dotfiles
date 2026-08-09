@@ -7,8 +7,7 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 export EDITOR="vim"
 export GIT_EDITOR="vim"
 export HOMEBREW_NO_ENV_HINTS=1
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
+eval "$(~/.local/bin/mise activate zsh)"
 
 # completions first
 autoload -U compinit && compinit
