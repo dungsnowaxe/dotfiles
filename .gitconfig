@@ -16,3 +16,11 @@
 	lg = log --graph --oneline --decorate --all
 [push]
 	autoSetupRemote = true
+[init]
+	defaultBranch = main
+[fetch]
+	prune = true
+[pull]
+	rebase = true
+[rerere]
+	enabled = true

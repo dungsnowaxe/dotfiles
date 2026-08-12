@@ -1,13 +1,17 @@
 ## Java
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+# Keep PATH entries unique across nested/reloaded shells.
+typeset -U path PATH
+path+=(
+  "$ANDROID_HOME/emulator"
+  "$ANDROID_HOME/platform-tools"
+)
 
 export EDITOR="vim"
 export GIT_EDITOR="vim"
 export HOMEBREW_NO_ENV_HINTS=1
-eval "$(~/.local/bin/mise activate zsh)"
 
 # completions first
 autoload -U compinit && compinit
@@ -20,8 +24,8 @@ alias cd="z"
 eval "$(fzf --zsh)"
 
 # plugins
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # aliases
 alias ls="eza"
@@ -34,37 +38,89 @@ alias cc="claude"
 alias op="opencode"
 alias gwt="git worktree list"
 
-take() {
+mkcd() {
   mkdir -p "$1" && cd "$1"
+}
+
+take() {
+  mkdir -p "$1"
+  cd "$1"
 }
 
 reload() {
   exec zsh
 }
 
-# Use fd as fzf source
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
+# Start Pi in a named Git worktree: pi -w feature-name [pi options]
+pi() {
+  if [[ "${1:-}" == "-w" || "${1:-}" == "--worktree" ]]; then
+    shift
+    "$HOME/.local/bin/pi-worktree" "$@"
+  else
+    command pi "$@"
+  fi
+}
+
+# Use fd as fzf source while excluding credential-bearing and generated trees.
+export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix \
+  --exclude .git \
+  --exclude node_modules \
+  --exclude .env \
+  --exclude ".env.*" \
+  --exclude .ssh \
+  --exclude .gnupg \
+  --exclude Keychains'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+export FZF_ALT_C_COMMAND="$FZF_DEFAULT_COMMAND --type=d"
 
 _fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
+  fd --hidden \
+    --exclude .git \
+    --exclude node_modules \
+    --exclude .env \
+    --exclude '.env.*' \
+    --exclude .ssh \
+    --exclude .gnupg \
+    --exclude Keychains \
+    . "$1"
 }
 
 _fzf_compgen_dir() {
-  fd --type=d --hidden --exclude .git . "$1"
+  fd --type=d --hidden \
+    --exclude .git \
+    --exclude node_modules \
+    --exclude .env \
+    --exclude '.env.*' \
+    --exclude .ssh \
+    --exclude .gnupg \
+    --exclude Keychains \
+    . "$1"
 }
 
 show_file_or_dir_preview='
-if [ -d {} ]; then
-  eza --tree --color=always {} | head -200
+candidate={}
+case "/$candidate/" in
+  */.*/*)
+    printf "Preview disabled for hidden paths.\n"
+    exit 0
+    ;;
+esac
+candidate_name=${candidate##*/}
+case "$candidate_name" in
+  *credential*|*secret*|*token*|*.pem|*.key|auth.json|*.p12|*.mobileprovision)
+    printf "Preview disabled for potentially sensitive files.\n"
+    exit 0
+    ;;
+esac
+if [ -d "$candidate" ]; then
+  eza --tree --color=always -- "$candidate" | head -200
 else
-  bat -n --color=always --line-range :500 {}
+  bat -n --color=always --line-range :500 -- "$candidate"
 fi
 '
 
 export FZF_CTRL_T_OPTS="--preview '$show_file_or_dir_preview'"
-export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
+export FZF_ALT_C_OPTS="--preview '$show_file_or_dir_preview'"
 
 _fzf_comprun() {
   local command=$1
@@ -72,13 +128,13 @@ _fzf_comprun() {
 
   case "$command" in
     cd)
-      fzf --preview 'eza --tree --color=always {} | head -200' "$@"
+      fzf --preview "$show_file_or_dir_preview" "$@"
       ;;
     export|unset)
-      fzf --preview "eval 'echo \${}'" "$@"
+      fzf --no-preview "$@"
       ;;
     ssh)
-      fzf --preview 'dig {}' "$@"
+      fzf --no-preview "$@"
       ;;
     *)
       fzf --preview "$show_file_or_dir_preview" "$@"
@@ -94,5 +150,6 @@ bindkey '^[[1;3D' vi-backward-word
 bindkey '^[[1;3C' vi-forward-word
 
 
-# Starship last
+# Initialize prompt first, then let mise make project tools authoritative.
 eval "$(starship init zsh)"
+eval "$(/Users/snowaxe/.local/bin/mise activate zsh)"
