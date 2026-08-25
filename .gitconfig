@@ -1,6 +1,5 @@
-[user]
-	name = Doan Anh Dung
-	email = doananhdung1310@gmail.com
+[include]
+	path = ~/.gitconfig.local
 [core]
 	pager = delta
 [interactive]

@@ -12,6 +12,13 @@ brew bundle --file=Brewfile
 exec zsh
 ```
 
+Create the machine-local Git identity once:
+
+```sh
+git config --file ~/.gitconfig.local user.name "Your Name"
+git config --file ~/.gitconfig.local user.email "you@example.com"
+```
+
 `install.sh` installs mise from `mise.run` and creates symlinks for the tracked configuration. Existing regular files are left untouched and reported as `skip`; move or remove them yourself before running the installer again.
 
 ## Included
@@ -24,6 +31,17 @@ exec zsh
 - CodexBar for tracking usage across AI subscriptions
 - Finicky for work/personal browser routing
 - Karabiner-Elements keyboard mappings
+
+## Headless devbox
+
+The devbox installer deploys only portable Git, tmux, and worktree tooling. It does not install macOS applications or copy credentials:
+
+```sh
+git clone https://github.com/dungsnowaxe/dotfiles.git ~/dotfiles
+~/dotfiles/devbox/install.sh
+```
+
+Install project runtimes from each project's mise configuration, then authenticate GitHub and agent CLIs independently on the devbox.
 
 ## Update
 
@@ -40,13 +58,14 @@ After editing configuration, linked files update immediately. Validate changes w
 
 ```sh
 zsh -n .zshrc .zprofile
-sh -n install.sh
+sh -n install.sh devbox/install.sh bin/dotfiles-check
 brew bundle check --file=Brewfile
+dotfiles-check
 ```
 
 ## Privacy
 
-Do not track credentials, auth files, shell history, `.env` files, or mutable agent state. `.claude.json`, `.codex/`, `.claude/`, `.agents/`, and Pi agent settings are ignored.
+Do not track credentials, auth files, shell history, `.env` files, or mutable agent state. `.claude.json`, `.codex/`, `.claude/`, `.agents/`, and Pi agent settings remain machine-local. Store only deliberately authored, credential-free agent skills or hooks outside those state directories before adding them explicitly.
 
 Before staging:
 

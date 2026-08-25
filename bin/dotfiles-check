@@ -1,0 +1,60 @@
+#!/bin/sh
+set -eu
+
+mode=mac
+if [ "${1:-}" = --devbox ]; then
+  mode=devbox
+elif [ "$#" -ne 0 ]; then
+  printf 'usage: dotfiles-check [--devbox]\n' >&2
+  exit 2
+fi
+
+repo=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+failed=0
+
+check_command() {
+  if command -v "$1" >/dev/null 2>&1; then
+    printf 'ok: command %s\n' "$1"
+  else
+    printf 'missing: command %s\n' "$1" >&2
+    failed=1
+  fi
+}
+
+check_link() {
+  source=$1
+  target=$2
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+    printf 'ok: link %s\n' "$target"
+  else
+    printf 'missing: link %s -> %s\n' "$target" "$source" >&2
+    failed=1
+  fi
+}
+
+check_command git
+check_command bash
+check_command mise
+check_command tmux
+check_link "$repo/.gitconfig" "$HOME/.gitconfig"
+check_link "$repo/.tmux.conf" "$HOME/.tmux.conf"
+check_link "$repo/.config/git/ignore" "$HOME/.config/git/ignore"
+check_link "$repo/bin/pi-worktree" "$HOME/.local/bin/pi-worktree"
+check_link "$repo/bin/dotfiles-check" "$HOME/.local/bin/dotfiles-check"
+
+if [ ! -f "$HOME/.gitconfig.local" ]; then
+  printf 'missing: ~/.gitconfig.local with Git user identity\n' >&2
+  failed=1
+fi
+
+if [ "$mode" = mac ]; then
+  check_command brew
+  check_command zsh
+  check_link "$repo/.zshrc" "$HOME/.zshrc"
+  check_link "$repo/.zprofile" "$HOME/.zprofile"
+  check_link "$repo/.finicky.js" "$HOME/.finicky.js"
+  check_link "$repo/.config/starship.toml" "$HOME/.config/starship.toml"
+  check_link "$repo/.config/karabiner/karabiner.json" "$HOME/.config/karabiner/karabiner.json"
+fi
+
+exit "$failed"
