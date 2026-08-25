@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Copy this to <repo>/.pi/worktree-setup and make it executable.
+# Pi asks once before running each changed hook version.
+# Arguments: $1 = new worktree path, $2 = primary repository root.
+set -euo pipefail
+
+worktree="$1"
+repo_root="$2"
+cd "$worktree"
+
+# 1. Copy secrets before anything that reads them.
+if [[ -f "$repo_root/.env.local" ]]; then
+  cp -p "$repo_root/.env.local" "$worktree/.env.local"
+fi
+
+# 2. Install deps. pnpm/node resolve automatically via mise (inherited from the
+#    shell that ran `pi -w`); no `mise activate` line needed in the hook.
+pnpm install
+
+# 3. Project-specific steps below, e.g.:
+# pnpm db:push

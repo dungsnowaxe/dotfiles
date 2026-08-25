@@ -35,3 +35,5 @@ auth.json
 !/.config/git/ignore
 !/.config/karabiner/
 !/.config/karabiner/karabiner.json
+!/.config/pi-worktree/
+!/.config/pi-worktree/setup.example

@@ -38,13 +38,8 @@ alias cc="claude"
 alias op="opencode"
 alias gwt="git worktree list"
 
-mkcd() {
-  mkdir -p "$1" && cd "$1"
-}
-
 take() {
-  mkdir -p "$1"
-  cd "$1"
+  mkdir -p "$1" && cd "$1"
 }
 
 reload() {
@@ -152,4 +147,4 @@ bindkey '^[[1;3C' vi-forward-word
 
 # Initialize prompt first, then let mise make project tools authoritative.
 eval "$(starship init zsh)"
-eval "$(/Users/snowaxe/.local/bin/mise activate zsh)"
+eval "$("$HOME/.local/bin/mise" activate zsh)"

@@ -20,6 +20,7 @@ exec zsh
 - tmux, Git, delta, GitHub CLI
 - Cursor as the primary editor; VS Code for extension checks; Zed as a lower-memory option
 - Codex and other currently installed development tools
+- `pi -w <name>` for isolated agent worktrees with optional trusted setup hooks
 - CodexBar for tracking usage across AI subscriptions
 - Finicky for work/personal browser routing
 - Karabiner-Elements keyboard mappings

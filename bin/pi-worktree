@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: pi -w <name> [pi options]
+
+Create or reuse a sibling worktree at <repo>-<name> (branch pi/<name>), run an
+optional setup hook on first creation, then start Pi from that worktree.
+
+Optional hook: <repo>/.pi/worktree-setup <worktree-path> <repo-root>
+Template: ~/.config/pi-worktree/setup.example
+EOF
+}
+
+die() {
+  printf 'pi-worktree: %s\n' "$*" >&2
+  exit 1
+}
+
+common_git_dir() {
+  local cwd="$1" common
+  common="$(git -C "$cwd" rev-parse --git-common-dir)" || return
+  [[ "$common" = /* ]] || common="$cwd/$common"
+  (cd "$common" && pwd -P)
+}
+
+run_setup_hook() {
+  local hash trusted answer
+  hash="$(git hash-object "$hook")"
+  trusted="$(git -C "$repo_root" config --local --get pi.worktree-setup-hash || true)"
+
+  if [[ "$hash" != "$trusted" ]]; then
+    if [[ ! -t 0 ]]; then
+      printf 'pi-worktree: skipped untrusted setup hook: %s\n' "$hook" >&2
+      return
+    fi
+    printf 'pi-worktree: setup hook needs approval:\n  %s\n' "$hook" >&2
+    read -r -p 'Trust this version and run it? [y/N] ' answer
+    case "$answer" in
+      y|Y|yes|YES|Yes)
+        git -C "$repo_root" config --local pi.worktree-setup-hash "$hash"
+        ;;
+      *)
+        printf 'pi-worktree: setup hook skipped\n' >&2
+        return
+        ;;
+    esac
+  fi
+
+  "$hook" "$worktree_path" "$repo_root"
+}
+
+cleanup_worktree() {
+  local name="$1" path="$2" branch="$3"
+  local dirty answer
+
+  # Only prompt when stdin is a real terminal; otherwise keep silently.
+  [[ -t 0 ]] || return 0
+
+  dirty="$(git -C "$path" status --porcelain 2>/dev/null || true)"
+  printf '\n' >&2
+  if [[ -n "$dirty" ]]; then
+    printf '⚠️  worktree "%s" has uncommitted changes:\n' "$name" >&2
+    printf '%s\n' "$dirty" | head -20 >&2
+    printf '\nForce-remove worktree "%s" and branch %s? [y/N] ' "$name" "$branch" >&2
+  else
+    printf 'Remove worktree "%s" (branch %s) on exit? [y/N] ' "$name" "$branch" >&2
+  fi
+  read -r answer
+  case "$answer" in
+    y|Y|yes|YES)
+      git -C "$repo_root" worktree remove --force "$path" >/dev/null 2>&1 || true
+      git -C "$repo_root" branch -D "$branch" >/dev/null 2>&1 || true
+      printf '✓ removed %s\n' "$path" >&2
+      ;;
+    *)
+      printf 'kept "%s" — resume with: cd %s && pi\n' "$name" "$path" >&2
+      ;;
+  esac
+}
+
+case "${1:-}" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+esac
+
+name="${1:-}"
+[[ -n "$name" ]] || {
+  usage >&2
+  exit 2
+}
+shift
+
+[[ "$name" =~ ^[[:alnum:]][[:alnum:]._-]*$ ]] ||
+  die 'name must contain only letters, numbers, dots, underscores, or hyphens'
+
+current_root="$(git rev-parse --show-toplevel 2>/dev/null)" ||
+  die 'run this inside a Git working tree'
+current_root="$(cd "$current_root" && pwd -P)"
+base_commit="$(git -C "$current_root" rev-parse HEAD)"
+common_dir="$(common_git_dir "$current_root")"
+repo_root="$current_root"
+[[ "$(basename "$common_dir")" = .git ]] && repo_root="$(dirname "$common_dir")"
+repo_root="$(cd "$repo_root" && pwd -P)"
+
+repo_parent="$(dirname "$repo_root")"
+repo_base="$(basename "$repo_root")"
+worktree_path="$repo_parent/$repo_base-$name"
+branch="pi/$name"
+hook="$repo_root/.pi/worktree-setup"
+
+git check-ref-format --branch "$branch" >/dev/null 2>&1 ||
+  die "invalid branch name: $branch"
+[[ ! -e "$hook" || -x "$hook" ]] ||
+  die "setup hook is not executable: $hook"
+
+created=false
+if [[ -e "$worktree_path" ]]; then
+  [[ -d "$worktree_path" ]] || die "path exists but is not a directory: $worktree_path"
+  [[ "$(common_git_dir "$worktree_path")" = "$common_dir" ]] ||
+    die "path is not a worktree for this repository: $worktree_path"
+else
+  if git -C "$repo_root" show-ref --verify --quiet "refs/heads/$branch"; then
+    git -C "$repo_root" worktree add "$worktree_path" "$branch"
+  else
+    git -C "$repo_root" worktree add -b "$branch" "$worktree_path" "$base_commit"
+  fi
+  created=true
+fi
+
+if [[ "$created" = true && -x "$hook" ]]; then
+  run_setup_hook
+fi
+
+cd "$worktree_path"
+pi "$@"
+rc=$?
+cd "$repo_root"
+cleanup_worktree "$name" "$worktree_path" "$branch"
+exit $rc
