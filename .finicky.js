@@ -1,11 +1,11 @@
-const BravePersonal = {
-  name: "Brave Browser",
-  profile: "Default",
+const EdgePersonal = {
+  name: "Microsoft Edge",
+  profile: "Profile 1", // fall back to "Default" if display names don't match
 };
 
-const BraveWork = {
-  name: "Brave Browser",
-  profile: "Birdeye", // change to "Profile 1/2/3" if this doesn't work
+const EdgeWork = {
+  name: "Microsoft Edge",
+  profile: "Birdeye", // fall back to "Profile 2" if display names don't match
 };
 
 const workHosts = [
@@ -23,17 +23,15 @@ const workHosts = [
 ];
 
 module.exports = {
-  defaultBrowser: BravePersonal,
+  defaultBrowser: EdgePersonal,
 
   handlers: [
     {
-      match: (url) => {
-        console.log(`Checking URL: ${JSON.stringify(url)}`);
-        return workHosts.some(
+      match: (url) =>
+        workHosts.some(
           (host) => url.host === host || url.host.endsWith(`.${host}`),
-        );
-      },
-      browser: BraveWork,
+        ),
+      browser: EdgeWork,
     },
   ],
 };

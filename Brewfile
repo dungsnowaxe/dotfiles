@@ -34,7 +34,6 @@ brew "zsh-syntax-highlighting"
 brew "can1357/tap/omp", trusted: true
 
 cask "android-studio"
-cask "brave-browser"
 cask "chatgpt"
 cask "claude-code@latest"
 cask "cloudflare-warp"
