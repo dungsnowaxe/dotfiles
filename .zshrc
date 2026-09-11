@@ -1,3 +1,10 @@
+# OPENSPEC:START
+# OpenSpec shell completions configuration
+fpath=("/Users/snowaxe/.zsh/completions" $fpath)
+autoload -Uz compinit
+compinit
+# OPENSPEC:END
+
 ## Java
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -148,3 +155,6 @@ bindkey '^[[1;3C' vi-forward-word
 # Initialize prompt first, then let mise make project tools authoritative.
 eval "$(starship init zsh)"
 eval "$("$HOME/.local/bin/mise" activate zsh)"
+
+# Added by Devin
+export PATH="/Users/snowaxe/.codeium/windsurf/bin:$PATH"
