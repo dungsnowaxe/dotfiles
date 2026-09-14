@@ -1,12 +1,4 @@
-const EdgePersonal = {
-  name: "Microsoft Edge",
-  profile: "Profile 1", // fall back to "Default" if display names don't match
-};
-
-const EdgeWork = {
-  name: "Microsoft Edge",
-  profile: "Birdeye", // fall back to "Profile 2" if display names don't match
-};
+const workBrowser = { name: "Google Chrome", profile: "Profile 2" }; // "Work"
 
 const workHosts = [
   "slack.com",
@@ -23,7 +15,8 @@ const workHosts = [
 ];
 
 module.exports = {
-  defaultBrowser: EdgePersonal,
+  // pin the profile, else Chrome opens links in its last-used profile
+  defaultBrowser: { name: "Google Chrome", profile: "Default" },
 
   handlers: [
     {
@@ -31,7 +24,7 @@ module.exports = {
         workHosts.some(
           (host) => url.host === host || url.host.endsWith(`.${host}`),
         ),
-      browser: EdgeWork,
+      browser: workBrowser,
     },
   ],
 };
