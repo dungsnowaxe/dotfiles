@@ -152,9 +152,15 @@ bindkey '^[[1;3D' vi-backward-word
 bindkey '^[[1;3C' vi-forward-word
 
 
-# Initialize prompt first, then let mise make project tools authoritative.
-eval "$(starship init zsh)"
+# Activate mise first so its precmd hook runs before starship renders the prompt.
+# zsh runs precmd_functions in registration order, so starship must be registered
+# last to see the PATH mise just updated for the current directory.
 eval "$("$HOME/.local/bin/mise" activate zsh)"
+eval "$(starship init zsh)"
 
 # Added by Devin
 export PATH="/Users/snowaxe/.codeium/windsurf/bin:$PATH"
+
+
+# Vite+ bin (https://viteplus.dev)
+. "/Users/snowaxe/.vite-plus/env"

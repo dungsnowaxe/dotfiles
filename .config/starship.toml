@@ -5,6 +5,7 @@ $directory\
 $git_branch\
 $git_status\
 $nodejs\
+$bun\
 $character
 """
 
@@ -16,6 +17,11 @@ symbol = " "
 
 [nodejs]
 format = "[$version](bold green) "
+
+# Starship suppresses $nodejs when bun.lock/bunfig.toml is present, so Bun repos
+# need $bun or they render no JS runtime at all. Styled to match $nodejs above.
+[bun]
+format = "[$version](bold red) "
 
 [package]
 disabled = true
