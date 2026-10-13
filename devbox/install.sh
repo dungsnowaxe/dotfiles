@@ -40,6 +40,8 @@ link "$repo/.config/pi-worktree/setup.example" "$HOME/.config/pi-worktree/setup.
 
 link "$repo/bin/dotfiles-check" "$HOME/.local/bin/dotfiles-check"
 
+sh "$repo/agents/install.sh"
+
 if [ ! -f "$HOME/.gitconfig.local" ]; then
   printf 'create ~/.gitconfig.local with your [user] name and email\n'
 fi

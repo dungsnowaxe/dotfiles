@@ -32,3 +32,5 @@ link "$repo/bin/pi-worktree" "$HOME/.local/bin/pi-worktree"
 link "$repo/bin/dotfiles-check" "$HOME/.local/bin/dotfiles-check"
 link "$repo/.config/pi-worktree/setup.example" "$HOME/.config/pi-worktree/setup.example"
 link "$repo/.config/karabiner/karabiner.json" "$HOME/.config/karabiner/karabiner.json"
+
+sh "$repo/agents/install.sh"

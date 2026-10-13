@@ -41,6 +41,12 @@ check_link "$repo/.tmux.conf" "$HOME/.tmux.conf"
 check_link "$repo/.config/git/ignore" "$HOME/.config/git/ignore"
 check_link "$repo/bin/pi-worktree" "$HOME/.local/bin/pi-worktree"
 check_link "$repo/bin/dotfiles-check" "$HOME/.local/bin/dotfiles-check"
+check_link "$repo/agents/AGENTS.md" "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/AGENTS.md"
+check_link "$repo/agents/AGENTS.md" "$HOME/.claude/CLAUDE.md"
+check_link "$repo/agents/AGENTS.md" "${CODEX_HOME:-$HOME/.codex}/AGENTS.md"
+check_link "$repo/agents/AGENTS.md" "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/AGENTS.md"
+check_link "$repo/agents/AGENTS.md" "$HOME/.zcode/AGENTS.md"
+check_link "$repo/agents/AGENTS.md" "$HOME/.qoder/AGENTS.md"
 
 if [ ! -f "$HOME/.gitconfig.local" ]; then
   printf 'missing: ~/.gitconfig.local with Git user identity\n' >&2
