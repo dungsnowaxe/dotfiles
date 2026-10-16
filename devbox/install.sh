@@ -36,6 +36,7 @@ link "$repo/.gitconfig" "$HOME/.gitconfig"
 link "$repo/.tmux.conf" "$HOME/.tmux.conf"
 link "$repo/.config/git/ignore" "$HOME/.config/git/ignore"
 link "$repo/bin/pi-worktree" "$HOME/.local/bin/pi-worktree"
+link "$repo/bin/pi-launch" "$HOME/.local/bin/pi-launch"
 link "$repo/.config/pi-worktree/setup.example" "$HOME/.config/pi-worktree/setup.example"
 
 link "$repo/bin/dotfiles-check" "$HOME/.local/bin/dotfiles-check"

@@ -53,13 +53,13 @@ reload() {
   exec zsh
 }
 
-# Start Pi in a named Git worktree: pi -w feature-name [pi options]
+# Manage Pi worktree cleanup/resume; create one with pi -w feature-name.
 pi() {
   if [[ "${1:-}" == "-w" || "${1:-}" == "--worktree" ]]; then
     shift
     "$HOME/.local/bin/pi-worktree" "$@"
   else
-    command pi "$@"
+    "$HOME/.local/bin/pi-launch" "$@"
   fi
 }
 

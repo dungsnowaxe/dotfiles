@@ -51,35 +51,6 @@ run_setup_hook() {
   "$hook" "$worktree_path" "$repo_root"
 }
 
-cleanup_worktree() {
-  local name="$1" path="$2" branch="$3"
-  local dirty answer
-
-  # Only prompt when stdin is a real terminal; otherwise keep silently.
-  [[ -t 0 ]] || return 0
-
-  dirty="$(git -C "$path" status --porcelain 2>/dev/null || true)"
-  printf '\n' >&2
-  if [[ -n "$dirty" ]]; then
-    printf '⚠️  worktree "%s" has uncommitted changes:\n' "$name" >&2
-    printf '%s\n' "$dirty" | head -20 >&2
-    printf '\nForce-remove worktree "%s" and branch %s? [y/N] ' "$name" "$branch" >&2
-  else
-    printf 'Remove worktree "%s" (branch %s) on exit? [y/N] ' "$name" "$branch" >&2
-  fi
-  read -r answer
-  case "$answer" in
-    y|Y|yes|YES)
-      git -C "$repo_root" worktree remove --force "$path" >/dev/null 2>&1 || true
-      git -C "$repo_root" branch -D "$branch" >/dev/null 2>&1 || true
-      printf '✓ removed %s\n' "$path" >&2
-      ;;
-    *)
-      printf 'kept "%s" — resume with: cd %s && pi\n' "$name" "$path" >&2
-      ;;
-  esac
-}
-
 case "${1:-}" in
   -h|--help)
     usage
@@ -135,9 +106,6 @@ if [[ "$created" = true && -x "$hook" ]]; then
   run_setup_hook
 fi
 
+launcher="$(cd "$(dirname "$0")" && pwd)/pi-launch"
 cd "$worktree_path"
-pi "$@"
-rc=$?
-cd "$repo_root"
-cleanup_worktree "$name" "$worktree_path" "$branch"
-exit $rc
+exec "$launcher" "$@"

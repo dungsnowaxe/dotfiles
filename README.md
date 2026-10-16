@@ -32,6 +32,38 @@ git config --file ~/.gitconfig.local user.email "you@example.com"
 - Finicky for work/personal browser routing
 - Karabiner-Elements keyboard mappings
 
+## Pi worktrees
+
+`pi -w task` creates or reuses a sibling `<repo>-task` worktree on branch
+`pi/task`. The launcher requires Node.js on PATH. On every interactive exit
+from a managed worktree, including `cd <repo>-task && pi --continue`, it offers
+to remove the worktree and branch. Keeping it is the default; dirty worktrees
+require explicit force-removal confirmation. Removal failure preserves the branch.
+
+From the main repository, `pi --session <id-or-path>` detects sessions belonging
+to a retained worktree in the same repository and offers:
+
+- **Switch and continue** (default): restart Pi's launch in the original working
+  directory with the existing session, without forking.
+- **Fork here**: copy the session into the current directory.
+- **Cancel**: do not start Pi.
+
+ID lookup reads session headers only, supports the default session store,
+`--session-dir`, and `PI_CODING_AGENT_SESSION_DIR`, and leaves ambiguous IDs to
+Pi. If storage is configured only through Pi's `sessionDir` setting, pass the
+session file path or `--session-dir` explicitly. This choice applies to CLI
+`--session`, not Pi's built-in `/resume` or `--resume` picker. Explicit
+`--fork`, print/protocol modes, and maintenance commands retain Pi's behavior
+without launcher prompts. Detection is deliberately limited to sibling
+`pi/<name>` worktrees, not arbitrary Git worktrees.
+
+Deploy launcher changes with `./install.sh`, then reload the shell with
+`exec zsh`. Run the disposable-repository regression tests with:
+
+```sh
+python3 tests/pi-worktree.py
+```
+
 ## Shared agent instructions
 
 `agents/AGENTS.md` is the single source for personal, cross-project agent guidance. The root `AGENTS.md` remains specific to this dotfiles repository. Both installers symlink the shared file to:
