@@ -24,6 +24,7 @@ link() {
 link "$repo/.zshrc" "$HOME/.zshrc"
 link "$repo/.zprofile" "$HOME/.zprofile"
 link "$repo/.tmux.conf" "$HOME/.tmux.conf"
+link "$repo/.config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
 link "$repo/.gitconfig" "$HOME/.gitconfig"
 link "$repo/.finicky.js" "$HOME/.finicky.js"
 link "$repo/.config/starship.toml" "$HOME/.config/starship.toml"

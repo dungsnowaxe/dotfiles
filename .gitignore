@@ -37,3 +37,6 @@ auth.json
 !/.config/karabiner/karabiner.json
 !/.config/pi-worktree/
 !/.config/pi-worktree/setup.example
+!/.config/herdr/
+/.config/herdr/*
+!/.config/herdr/config.toml

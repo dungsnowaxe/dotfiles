@@ -32,6 +32,30 @@ git config --file ~/.gitconfig.local user.email "you@example.com"
 - Finicky for work/personal browser routing
 - Karabiner-Elements keyboard mappings
 
+## Herdr trial
+
+Herdr is optional; tmux is unchanged. `./install.sh` links
+`.config/herdr/config.toml`. The prefix matches tmux: **Ctrl-a**, then a key.
+
+| Key after Ctrl-a | Action |
+| --- | --- |
+| `c`, `n`, `p`, `1`–`9` | New / next / previous / numbered tab |
+| `N` or `,` | Rename tab |
+| `\|`, `-` | Split right / down |
+| `h/j/k/l` or arrows | Focus pane |
+| `H/J/K/L` | Swap pane directionally (not tmux's previous/next order) |
+| `o`, `z`, `x` | Cycle / zoom / close pane |
+| `w` | Searchable pane/tab picker |
+| `[`, then `v`, `y` | Vi copy mode, select, copy (`q` exits) |
+| `d` | Detach; keep session running |
+| `r`, `R` | Reload config / resize mode |
+| `C`, `g` | New workspace / workspace navigation |
+| `?` | Show active bindings |
+
+Press Ctrl-a twice to send Ctrl-a to the pane. Herdr tabs start at 1;
+new tabs open without a naming prompt. Reload an existing server with
+`herdr server reload-config` after deployment.
+
 ## Pi worktrees
 
 `pi -w task` creates or reuses a sibling `<repo>-task` worktree on branch
