@@ -120,14 +120,24 @@ Install project runtimes from each project's mise configuration, then authentica
 
 ## Update
 
-Refresh the package inventory from what is currently installed:
+Compare the Brewfile with an installed-state snapshot:
 
 ```sh
 cd ~/dotfiles
-brew bundle dump --file=Brewfile --force
+brew bundle dump --file=- --no-describe --no-go
+brew bundle check --file=Brewfile --no-upgrade --verbose
 ```
 
-Review the diff before committing. Keep project-specific packages in their projects rather than the global Brewfile.
+Merge the snapshot deliberately rather than overwriting the Brewfile: a dump omits manually installed apps and npm packages in other Node prefixes. `--no-go` avoids recording Go's bundled `go` and `gofmt` commands as standalone packages. Review the diff before committing; keep project-specific packages in their projects.
+
+### Inventory boundaries
+
+- Discord, Qoder, Hopper Disassembler, and VS Code are installed manually but included as casks for future setup. Homebrew currently reports these four as missing because they lack valid installation receipts. Hopper currently lives in `~/Applications`; the cask defaults to `/Applications`.
+- `ui-ux-pro-max-cli` is installed under Vite+'s Node prefix. The Brewfile records it as a global npm package, but Bundle checks only the active npm prefix and currently reports it missing.
+- Xcode is installed through the Mac App Store and is not managed here. Safari is part of macOS. Browser-created apps and the local Claude Code URL Handler are not standalone casks.
+- mise itself is installed by `./install.sh`; language runtimes remain managed by mise. Pi's separate installation and the repository's local launch scripts are outside the Brewfile inventory.
+
+Refreshing this inventory does not adopt, reinstall, or upgrade existing applications.
 
 After editing configuration, linked files update immediately. Validate changes with:
 
