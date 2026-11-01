@@ -39,3 +39,4 @@ auto_switch = false
 [ui]
 # Create tabs immediately, as tmux does; rename explicitly when needed.
 prompt_new_tab_name = false
+status_indicators = "dots"
