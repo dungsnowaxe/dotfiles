@@ -23,3 +23,6 @@
 	rebase = true
 [rerere]
 	enabled = true
+[user]
+	name = Doan Anh Dung
+	email = doananhdung1310@gmail.com
