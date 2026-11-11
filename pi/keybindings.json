@@ -1,0 +1,7 @@
+{
+  "$schema": "https://pi.dev/schemas/keybindings.schema.json",
+  "tui.altScreen.top": ["ctrl+home", "home"],
+  "tui.altScreen.bottom": ["ctrl+end", "end"],
+  "tui.altScreen.halfPageUp": "ctrl+alt+pageUp",
+  "tui.altScreen.halfPageDown": "ctrl+alt+pageDown"
+}

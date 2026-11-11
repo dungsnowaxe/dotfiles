@@ -48,6 +48,7 @@ check_link "$repo/agents/AGENTS.md" "${CODEX_HOME:-$HOME/.codex}/AGENTS.md"
 check_link "$repo/agents/AGENTS.md" "${XDG_CONFIG_HOME:-$HOME/.config}/opencode/AGENTS.md"
 check_link "$repo/agents/AGENTS.md" "$HOME/.zcode/AGENTS.md"
 check_link "$repo/agents/AGENTS.md" "$HOME/.qoder/AGENTS.md"
+check_link "$repo/pi/keybindings.json" "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/keybindings.json"
 
 if [ ! -f "$HOME/.gitconfig.local" ]; then
   printf 'missing: ~/.gitconfig.local with Git user identity\n' >&2
